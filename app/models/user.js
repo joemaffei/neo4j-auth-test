@@ -1,13 +1,16 @@
 // load the things we need
-var mongoose = require('mongoose');
+var db = require("seraph")("http://localhost:7474");
+var model = require('seraph-model');
 var bcrypt   = require('bcrypt-nodejs');
 
-// define the schema for our user model
-var userSchema = mongoose.Schema({
+var User = model(db,'user');
 
+// define the schema for our user model
+User.schema = {email:String,password:String};
+/*
     local            : {
         email        : String,
-        password     : String,
+        password     : String
     },
     facebook         : {
         id           : String,
@@ -27,18 +30,20 @@ var userSchema = mongoose.Schema({
         email        : String,
         name         : String
     }
+};
+*/
 
-});
-
+/*
 // generating a hash
-userSchema.methods.generateHash = function(password) {
+User.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+User.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
 };
+*/
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
+module.exports = User;
